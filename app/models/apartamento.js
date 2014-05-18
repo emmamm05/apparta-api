@@ -17,11 +17,20 @@ var Calificacion = new Schema({
 });
 
 var Apartamento   = new Schema({
-      descripcion :{ type: String, required: true },
-      //Faltan...
-      comentarios: [Comentario]
+      descripcion: { type: String, required: true },
+      direccion_fisica: { type: String, required: true },
+      area: { type: Number },
+      ubicacion_latitud:{ type: Number, required: true },
+      ubicacion_longitud:{ type: Number, required: true },
+      cercania_tec: { type: Number, required: true },
+      comentarios: [Comentario],
       calificaciones: [Calificacion]
+      opcion_garage: { type: Boolean, required: true},
+      opcion_amueblado: { type: Boolean, required: true},
+      opcion_seguridad: { type: Boolean, required: true },
+      opcion_internet: { type: Boolean, required: true}
 });
+//Falta forzar algunos numeros en decimales
 
 module.exports = mongoose.model('Apartamento', Apartamento);
  
