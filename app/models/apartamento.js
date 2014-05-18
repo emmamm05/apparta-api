@@ -24,9 +24,15 @@ var Apartamento   = new Schema({
       ubicacion_longitud:{ type: Number, required: true },
       cercania_tec: { type: Number, required: true },
       comentarios: [Comentario],
-      calificaciones: [Calificacion]
-      opcion_garage: { type: Boolean, required: true},
-      opcion_amueblado: { type: Boolean, required: true},
+      calificaciones: [Calificacion],
+	// actualizacion de atributos
+      mensualidad: { type: Number, required: true},	//desde 25 000 hasta 500 000
+      habitaciones: { type: Number, required: true},
+      titulo: { type: String, required: true},		//desde 5 hasta 15 caracteres
+      genero: { type: String, required: true},		//female, male, unisex
+      opcion_agua: { type: Boolean, required: true},
+      opcion_electricidad: { type: Boolean, required: true},
+	// fin de actualizacion de atributos
       opcion_seguridad: { type: Boolean, required: true },
       opcion_internet: { type: Boolean, required: true}
 });
