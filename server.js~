@@ -9,7 +9,6 @@ var app        = express(); 				// define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 var Bear     = require('./app/models/bear');
-var Token    = require('./app/models/usuario');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -35,23 +34,6 @@ router.get('/', function(req, res) {
 	res.json({ message: 'hooray! welcome to our api!' });	
 });
 
-//TOKENS routes
-router.route('/tokens')
-	// create a token (accessed at POST http://localhost:8080/api/tokens)
-	.post(function(req, res) {
-		
-		var tokens = new Token(); 		// create a new instance of the Bear model
-		tokens.token = req.body.token;  // set the bears name (comes from the request)
-
-		// save the token and check for errors
-		tokens.save(function(err) {
-			if (err)
-				res.send(err);
-
-			res.json({ message: 'Token created!' });
-		});
-		
-	})
 // more routes for our API will happen here
 
 router.route('/bears')
