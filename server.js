@@ -37,26 +37,22 @@ router.get('/', function(req, res) {
 });
 
 //TOKENS routes
-/*router.route('/tokens')
+router.route('/tokens')
 	// create a token (accessed at POST http://localhost:8080/api/tokens)
 	.post(function(req, res) {
-		
 		var tokens = new Token(); 		// create a new instance of the Token model
 		tokens.token = req.body.token;  // set the tokens token (comes from the request)
-
 		// save the token and check for errors
 		tokens.save(function(err) {
 			if (err)
 				res.send(err);
-
 			res.json({ message: 'Token created!' });
-		});
-		
+		});		
 	});
 
 router.route('/tokens/:token_id')
 // more routes for our API will happen here
-// delete the token with this id (accessed at DELETE http://localhost:8080/api/bears/:token_id)
+// delete the token with this id (accessed at DELETE http://localhost:8080/api/tokens/:token_id)
 	.delete(function(req, res) {router.route('/tokens')
 		Token.remove({
 			_id: req.params.token_id
@@ -68,7 +64,7 @@ router.route('/tokens/:token_id')
 		});
 	});
 
-
+/*
 //CUENTA routes
 router.route('/cuenta')
 	// update the bear with this id (accessed at PUT http://localhost:8080/api/bears/:bear_id)
@@ -191,20 +187,11 @@ router.route('/usuario/user_id/:lista_favoritos')
 			res.json({ message: 'Successfully deleted' });
 		});
 	});
-
-
-//Buscar apartamento
-router.route('/apartamento/search?user_id&user_token&app_token&search_params')
-	.get(function(req, res) {
-		Bear.findById(req.params.user_id, function(err, bear) {
-			if (err)
-				res.send(err);
-			res.json(bear);
-		});
-	});*/
+*/
 
 
 
+//http://localhost:8080/api/apartamentos
 //Agregar nuevo apartamento
 router.route('/apartamentos') //?app_token
 	.post(function(req, res) {
@@ -231,7 +218,7 @@ router.route('/apartamentos') //?app_token
 			if (err)
 				res.send(err);
 
-			res.json({ message: 'Token created!' });
+			res.json({ message: 'Apartamento created!' });
 		});
 		
 	});
@@ -282,13 +269,37 @@ router.route(' /apartamentos/:aparta_id')//?app_token
 	.delete(function(req, res) {router.route('/apartamentos')
 		Apartamento.remove({
 			_id: req.params.aparta_id
-		}, function(err, token) {
+		}, function(err, apartamento) {
 			if (err)
 				res.send(err);
 
 			res.json({ message: 'Successfully deleted' });
 		});
 	});
+
+//Buscar apartamento
+router.route('/apartamentos/search?user_id&user_token&app_token&search_params')
+	.get(function(req, res) {
+		Apartamento.findWhere({descripcion : req.body.descripcion,
+			direccion_fisica : req.body.direccion_fisica,
+			area : req.body.area,
+			ubicacion_latitud : req.body.ubicacion_latitud,
+			ubicacion_longitud : req.body.ubicacion_longitud,
+			cercania_tec : req.body.cercania_tec,
+			mensualidad: req.body.mensualidad,
+			habitaciones: req.body.habitaciones,
+			titulo: req.body.titulo,
+			genero: req.body.genero,
+			opcion_agua: req.body.opcion_agua,
+			opcion_electricidad: req.body.opcion_electricidad,
+			opcion_seguridad:req.body.opcion_seguridad,
+			opcion_internet: req.body.opcion_internet}, function(err, apartamento) {
+			if (err)
+				res.send(err);
+			res.json(apartamento);
+		});
+	});
+
 /*
 //Cargar apartamentos
 	.get(function(req, res) {
