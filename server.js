@@ -40,13 +40,20 @@ router.get('/', function(req, res) {
 router.route('/tokens')
 	// create a token (accessed at POST http://localhost:8080/api/tokens)
 	.post(function(req, res) {
-		var tokens = new Token(); 		// create a new instance of the Token model
-		tokens.token = req.body.token;  // set the tokens token (comes from the request)
-		// save the token and check for errors
-		tokens.save(function(err) {
+		var usuario = Usuario.findOne( {email: req.params.email}, function(err,usuario){
+		    if (err)
+			res.send(err);
+		});
+		
+		var token = new Token();
+		require('crypto').randomBytes(48, function(ex, buf) {
+			token.token = buf.toString('hex');
+		        usuario.tokens = [token];
+		});
+		token.save(function(err) {
 			if (err)
 				res.send(err);
-			res.json({ message: 'Token created!' });
+			res.json(token);
 		});		
 	});
 
@@ -196,6 +203,7 @@ router.route('/usuario/user_id/:lista_favoritos')
 router.route('/apartamentos') //?app_token
 	.post(function(req, res) {
 		
+	        console.log(req.body);
 		var apartamento = new Apartamento(); 		
 		apartamento.descripcion = req.body.descripcion;
 		apartamento.direccion_fisica = req.body.direccion_fisica;
@@ -217,14 +225,37 @@ router.route('/apartamentos') //?app_token
 		apartamento.save(function(err) {
 			if (err)
 				res.send(err);
-
-			res.json({ message: 'Apartamento created!' });
+			res.json({id:apartamento._id, message: 'Apartamento created!' });
 		});
 		
 	});
+	
+//Buscar apartamento. No funciona
+router.route('/apartamentos/search')
+	.get(function(req, res) {
+		Apartamento.find({
+			descripcion : req.params.descripcion,
+			direccion_fisica : req.params.direccion_fisica,
+			area : req.params.area,
+			ubicacion_latitud : req.params.ubicacion_latitud,
+			ubicacion_longitud : req.params.ubicacion_longitud,
+			cercania_tec : req.params.cercania_tec,
+			mensualidad: req.params.mensualidad,
+			habitaciones: req.params.habitaciones,
+			titulo: req.params.titulo,
+			genero: req.params.genero,
+			opcion_agua: req.params.opcion_agua,
+			opcion_electricidad: req.params.opcion_electricidad,
+			opcion_seguridad:req.params.opcion_seguridad,
+			opcion_internet: req.body.opcion_internet}, function(err, apartamento) {
+			if (err)
+				res.send(err);
+			res.json(apartamento);
+			});
+	});
 
 //Ver Información de apartamento
-router.route(' /apartamentos/:aparta_id')//?app_token
+router.route('/apartamentos/:aparta_id')//?app_token
 	.get(function(req, res) {
 		Apartamento.findById(req.params.aparta_id, function(err, apartamento) {
 			if (err)
@@ -237,10 +268,6 @@ router.route(' /apartamentos/:aparta_id')//?app_token
 
 		// use our bear model to find the bear we want
 		Apartamento.findById(req.params.aparta_id, function(err, apartamento) {
-
-			if (err)
-				res.send(err);
-
 			apartamento.descripcion = req.body.descripcion;
 			apartamento.direccion_fisica = req.body.direccion_fisica;
 			apartamento.area = req.body.area;
@@ -277,28 +304,7 @@ router.route(' /apartamentos/:aparta_id')//?app_token
 		});
 	});
 
-//Buscar apartamento
-router.route('/apartamentos/search?user_id&user_token&app_token&search_params')
-	.get(function(req, res) {
-		Apartamento.findWhere({descripcion : req.body.descripcion,
-			direccion_fisica : req.body.direccion_fisica,
-			area : req.body.area,
-			ubicacion_latitud : req.body.ubicacion_latitud,
-			ubicacion_longitud : req.body.ubicacion_longitud,
-			cercania_tec : req.body.cercania_tec,
-			mensualidad: req.body.mensualidad,
-			habitaciones: req.body.habitaciones,
-			titulo: req.body.titulo,
-			genero: req.body.genero,
-			opcion_agua: req.body.opcion_agua,
-			opcion_electricidad: req.body.opcion_electricidad,
-			opcion_seguridad:req.body.opcion_seguridad,
-			opcion_internet: req.body.opcion_internet}, function(err, apartamento) {
-			if (err)
-				res.send(err);
-			res.json(apartamento);
-		});
-	});
+
 
 /*
 //Cargar apartamentos
