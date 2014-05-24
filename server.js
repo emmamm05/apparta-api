@@ -212,10 +212,10 @@ router.route('/usuarios') //?app_token
 		 
 
 		// save the token and check for errors
-		apartamento.save(function(err) {
+		usuario.save(function(err) {
 			if (err)
 				res.send(err);
-			res.json({id:apartamento._id, message: 'Apartamento created!' });
+			res.json({id:usuario._id, message: 'Usuario created!' });
 		});
 		
 	});
