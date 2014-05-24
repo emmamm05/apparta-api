@@ -197,6 +197,82 @@ router.route('/usuario/user_id/:lista_favoritos')
 */
 
 
+//http://localhost:8080/api/usuarios
+//Agregar nuevo usuario
+router.route('/usuarios') //?app_token
+	.post(function(req, res) {
+		
+	        console.log(req.body);
+		var usuario = new Usuario(); 		
+			usuario.nombre = req.body.nombre;
+			usuario.apellido = req.body.apellido;
+			usuario.email = req.body.email;
+			usuario.edad = req.body.edad;
+			usuario.genero = req.body.genero;
+		 
+
+		// save the token and check for errors
+		apartamento.save(function(err) {
+			if (err)
+				res.send(err);
+			res.json({id:apartamento._id, message: 'Apartamento created!' });
+		});
+		
+	});
+	
+//Buscar usuario. No funciona
+router.route('/usuarios/search')
+	.get(function(req, res) {
+		Usuario.findWhere({
+			nombre : req.params.nombre,
+			apellido : req.params.apellido}, function(err, usuario) {
+			if (err)
+				res.send(err);
+			res.json(usuario);
+			});
+	});
+
+//Ver Información de usuario
+router.route('/usuarios/:usuario_id')//?app_token
+	.get(function(req, res) {
+		Usuario.findById(req.params.usuario_id, function(err, usuario) {
+			if (err)
+				res.send(err);
+			res.json(usuario);
+		});
+	})
+//Modificar Información de usuario
+	.put(function(req, res) {
+
+		// use our bear model to find the bear we want
+		Usuario.findById(req.params.usuario_id, function(err, apartamento) {
+			usuario.nombre = req.body.nombre;
+			usuario.apellido = req.body.apellido;
+			usuario.email = req.body.email;
+			usuario.edad = req.body.edad;
+			usuario.genero = req.body.genero;
+			
+			// save User
+			usuario.save(function(err) {
+				if (err)
+					res.send(err);
+
+				res.json({ message: 'Usuario updated!' });
+			});
+
+		});
+	})
+//Remover usuario
+	.delete(function(req, res) {router.route('/usuarios')
+		Usuario.remove({
+			_id: req.params.usuario_id
+		}, function(err, usuario) {
+			if (err)
+				res.send(err);
+
+			res.json({ message: 'Successfully deleted' });
+		});
+	});
 
 //http://localhost:8080/api/apartamentos
 //Agregar nuevo apartamento
@@ -233,7 +309,7 @@ router.route('/apartamentos') //?app_token
 //Buscar apartamento. No funciona
 router.route('/apartamentos/search')
 	.get(function(req, res) {
-		Apartamento.find({
+		Apartamento.findWhere({
 			descripcion : req.params.descripcion,
 			direccion_fisica : req.params.direccion_fisica,
 			area : req.params.area,
@@ -287,7 +363,7 @@ router.route('/apartamentos/:aparta_id')//?app_token
 				if (err)
 					res.send(err);
 
-				res.json({ message: 'Apartament updated!' });
+				res.json({ message: 'Apartamento updated!' });
 			});
 
 		});
