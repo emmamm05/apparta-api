@@ -206,13 +206,15 @@ router.route('/usuarios') //?app_token
 		var usuario = new Usuario(); 		
 			usuario.nombre = req.body.nombre;
 			usuario.apellido = req.body.apellido;
+			usuario.oauth_id = req.body.oauth_id;
 			usuario.email = req.body.email;
 			usuario.edad = req.body.edad;
+			usuario.password = req.body.password;
 			usuario.genero = req.body.genero;
 		 
 
 		// save the token and check for errors
-		apartamento.save(function(err) {
+		usuario.save(function(err) {
 			if (err)
 				res.send(err);
 			res.json({id:usuario._id, message: 'Usuario created!' });

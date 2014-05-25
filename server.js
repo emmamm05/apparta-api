@@ -206,8 +206,10 @@ router.route('/usuarios') //?app_token
 		var usuario = new Usuario(); 		
 			usuario.nombre = req.body.nombre;
 			usuario.apellido = req.body.apellido;
+			usuario.oauth_id = req.body.oauth_id;
 			usuario.email = req.body.email;
 			usuario.edad = req.body.edad;
+			usuario.password = req.body.password;
 			usuario.genero = req.body.genero;
 		 
 
@@ -309,7 +311,7 @@ router.route('/apartamentos') //?app_token
 //Buscar apartamento. No funciona
 router.route('/apartamentos/search')
 	.get(function(req, res) {
-		Apartamento.findWhere({
+		Apartamento.where({
 			descripcion : req.params.descripcion,
 			direccion_fisica : req.params.direccion_fisica,
 			area : req.params.area,
@@ -323,10 +325,10 @@ router.route('/apartamentos/search')
 			opcion_agua: req.params.opcion_agua,
 			opcion_electricidad: req.params.opcion_electricidad,
 			opcion_seguridad:req.params.opcion_seguridad,
-			opcion_internet: req.body.opcion_internet}, function(err, apartamento) {
+			opcion_internet: req.body.opcion_internet}, function(err, apartamentos) {
 			if (err)
 				res.send(err);
-			res.json(apartamento);
+			res.json(apartamentos);
 			});
 	});
 
