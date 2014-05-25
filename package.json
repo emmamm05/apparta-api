@@ -1,10 +1,27 @@
 {
-	"name": "node-api",
-	"main": "server.js",
-	"dependencies": {
-		"express": "~4.0.0",
-		"mongoose": "~3.6.13",
-		"body-parser": "~1.0.1"
-	}
+  "name": "apparta-api",
+  "main": "server.js",
+  "dependencies": {
+    "express": "~4.0.0",
+    "mongoose": "~3.6.13",
+    "body-parser": "~1.0.1"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "description": "apparta-api ===========",
+  "version": "0.0.1",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/emmamm05/apparta-api.git"
+  },
+  "keywords": [
+    "apartamentos"
+  ],
+  "author": "karla bairon emma",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emmamm05/apparta-api/issues"
+  }
 }
-

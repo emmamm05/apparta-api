@@ -15,7 +15,7 @@ var Apartamento = require('./app/models/apartamento');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
-mongoose.connect('mongodb://localhost/example'); // connect to our database
+mongoose.connect('mongodb://<emmamm05>:<8ClQ5RA4Nywv>@ds033499.mongolab.com:33499/apparta'); // connect to our database
 
 var port = process.env.PORT || 8080; 		// set our port
 
