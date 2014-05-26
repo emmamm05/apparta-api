@@ -15,7 +15,8 @@ var Apartamento = require('./app/models/apartamento');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
-mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
+//mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
+mongoose.connect('mongodb://localhost/example');
 
 var port = process.env.PORT || 8080; 		// set our port
 
@@ -27,7 +28,10 @@ var router = express.Router(); 				// get an instance of the express Router
 // middleware to use for all requests
 router.use(function(req, res, next) {
 	// do logging
-	console.log('Something is happening.');
+	console.log(req.url);
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Content-Type,Origin,X-Requested-With");
+        res.setHeader("Content-Type","application/json; charset=utf-8");
 	next(); // make sure we go to the next routes and don't stop here
 });
 
@@ -201,7 +205,6 @@ router.route('/usuario/user_id/:lista_favoritos')
 //Agregar nuevo usuario
 router.route('/usuarios') //?app_token
 	.post(function(req, res) {
-		
 	        console.log(req.body);
 		var usuario = new Usuario(); 		
 			usuario.nombre = req.body.nombre;
@@ -280,8 +283,9 @@ router.route('/usuarios/:usuario_id')//?app_token
 //Agregar nuevo apartamento
 router.route('/apartamentos') //?app_token
 	.post(function(req, res) {
-		
-	        console.log(req.body);
+		console.log("POST /apartamentos");
+		console.log(req.params);
+		console.log(req.body);
 		var apartamento = new Apartamento(); 		
 		apartamento.descripcion = req.body.descripcion;
 		apartamento.direccion_fisica = req.body.direccion_fisica;
@@ -300,9 +304,11 @@ router.route('/apartamentos') //?app_token
 		 
 
 		// save the token and check for errors
+		console.log(apartamento);
 		apartamento.save(function(err) {
 			if (err)
 				res.send(err);
+			console.log("error"+err);
 			res.json({id:apartamento._id, message: 'Apartamento created!' });
 		});
 		
