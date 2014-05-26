@@ -208,6 +208,7 @@ router.route('/usuarios') //?app_token
 			usuario.apellido = req.body.apellido;
 			usuario.oauth_id = req.body.oauth_id;
 			usuario.email = req.body.email;
+			usuario.telefono = req.body.telefono;
 			usuario.edad = req.body.edad;
 			usuario.password = req.body.password;
 			usuario.genero = req.body.genero;
@@ -222,16 +223,17 @@ router.route('/usuarios') //?app_token
 		
 	});
 	
-//Buscar usuario. No funciona
+//Buscar usuario. 
 router.route('/usuarios/search')
 	.get(function(req, res) {
-		Usuario.findWhere({
-			nombre : req.params.nombre,
-			apellido : req.params.apellido}, function(err, usuario) {
-			if (err)
-				res.send(err);
-			res.json(usuario);
-			});
+		var query = Usuario.find({
+			"nombre" : req.query.nombre,
+			"apellido" : req.query.apellido});
+		query.exec( function(err, usuario) {
+				if (err)
+					res.send(err);
+				res.json(usuario);
+			   });
 	});
 
 //Ver Información de usuario
@@ -251,8 +253,7 @@ router.route('/usuarios/:usuario_id')//?app_token
 			usuario.nombre = req.body.nombre;
 			usuario.apellido = req.body.apellido;
 			usuario.email = req.body.email;
-			usuario.edad = req.body.edad;
-			usuario.genero = req.body.genero;
+			usuario.telefono = req.body.telefono;
 			
 			// save User
 			usuario.save(function(err) {

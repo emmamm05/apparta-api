@@ -15,7 +15,7 @@ var Apartamento = require('./app/models/apartamento');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
-mongoose.connect('mongodb://localhost/example'); // connect to our database
+mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
 
 var port = process.env.PORT || 8080; 		// set our port
 
@@ -208,6 +208,7 @@ router.route('/usuarios') //?app_token
 			usuario.apellido = req.body.apellido;
 			usuario.oauth_id = req.body.oauth_id;
 			usuario.email = req.body.email;
+			usuario.telefono = req.body.telefono;
 			usuario.edad = req.body.edad;
 			usuario.password = req.body.password;
 			usuario.genero = req.body.genero;
@@ -251,8 +252,7 @@ router.route('/usuarios/:usuario_id')//?app_token
 			usuario.nombre = req.body.nombre;
 			usuario.apellido = req.body.apellido;
 			usuario.email = req.body.email;
-			usuario.edad = req.body.edad;
-			usuario.genero = req.body.genero;
+			usuario.telefono = req.body.telefono;
 			
 			// save User
 			usuario.save(function(err) {
@@ -308,7 +308,7 @@ router.route('/apartamentos') //?app_token
 		
 	});
 	
-//Buscar apartamento.
+//Buscar apartamento. Falta calificacion
 router.route('/apartamentos/search')
 	.get(function(req, res) {
 		console.log(req.query.cercania_tec);
@@ -340,7 +340,7 @@ router.route('/apartamentos/search')
 		
 	});
 
-//Ver Información de apartamento
+//Ver Información de apartamento. Falta calificacion
 router.route('/apartamentos/:aparta_id')//?app_token
 	.get(function(req, res) {
 		Apartamento.findById(req.params.aparta_id, function(err, apartamento) {
