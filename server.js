@@ -308,31 +308,39 @@ router.route('/apartamentos') //?app_token
 		
 	});
 	
-//Buscar apartamento. No funciona
+//Buscar apartamento. Falta calificacion
 router.route('/apartamentos/search')
 	.get(function(req, res) {
-		Apartamento.where({
-			descripcion : req.params.descripcion,
-			direccion_fisica : req.params.direccion_fisica,
-			area : req.params.area,
-			ubicacion_latitud : req.params.ubicacion_latitud,
-			ubicacion_longitud : req.params.ubicacion_longitud,
-			cercania_tec : req.params.cercania_tec,
-			mensualidad: req.params.mensualidad,
-			habitaciones: req.params.habitaciones,
-			titulo: req.params.titulo,
-			genero: req.params.genero,
-			opcion_agua: req.params.opcion_agua,
-			opcion_electricidad: req.params.opcion_electricidad,
-			opcion_seguridad:req.params.opcion_seguridad,
-			opcion_internet: req.body.opcion_internet}, function(err, apartamentos) {
+		console.log(req.query.cercania_tec);
+		var query = Apartamento.find({	"cercania_tec":{$lte:req.query.cercania_tec},
+						"mensualidad":{$gte:req.query.min_mensualidad, $lte:req.query.max_mensualidad},
+						"habitaciones":{$gte:req.query.habitaciones},
+						"genero":req.query.genero
+					});
+		if(req.query.opcion_seguridad=="true"){
+			query.find({"opcion_seguridad":true});
+		}
+		if(req.query.opcion_agua=="true"){
+			query.find({"opcion_agua":true});
+		}
+		if(req.query.opcion_electricidad=="true"){
+			query.find({"opcion_electricidad":true});
+		}
+		if(req.query.opcion_internet=="true"){
+			query.find({"opcion_internet":true});
+		}
+		
+		query.exec(function (err, apartamento) {
+  		// called when the `query.complete` or `query.error` are called
+  		// internally
 			if (err)
 				res.send(err);
-			res.json(apartamentos);
-			});
+			res.json(apartamento);
+		});
+		
 	});
 
-//Ver Información de apartamento
+//Ver Información de apartamento. Falta calificacion
 router.route('/apartamentos/:aparta_id')//?app_token
 	.get(function(req, res) {
 		Apartamento.findById(req.params.aparta_id, function(err, apartamento) {

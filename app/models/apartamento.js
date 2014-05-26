@@ -25,6 +25,7 @@ var Apartamento   = new Schema({
       cercania_tec: { type: Number, required: true },
       comentarios: [Comentario],
       calificaciones: [Calificacion],
+      calificacion: { type: Number, required: true },
 	// actualizacion de atributos
       mensualidad: { type: Number, required: true},	//desde 25 000 hasta 500 000
       habitaciones: { type: Number, required: true},
@@ -39,5 +40,4 @@ var Apartamento   = new Schema({
 //Falta forzar algunos numeros en decimales
 
 module.exports = mongoose.model('Apartamento', Apartamento);
- 
- 
+
