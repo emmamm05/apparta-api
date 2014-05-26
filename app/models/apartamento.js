@@ -9,6 +9,9 @@ function longitud_comentario (str) {
 var Comentario = new Schema({
      contenido: { type: String, required: true, validate: [longitud_comentario, 'comentario muy extenso'] },
      autor: {type: ObjectId, ref: 'Usuario'},
+     fecha_publicacion : { type : Date }
+
+
 });
 
 var Calificacion = new Schema({
