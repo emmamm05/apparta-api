@@ -211,6 +211,7 @@ router.route('/usuarios') //?app_token
 			usuario.apellido = req.body.apellido;
 			usuario.oauth_id = req.body.oauth_id;
 			usuario.email = req.body.email;
+			usuario.telefono = req.body.telefono;
 			usuario.edad = req.body.edad;
 			usuario.password = req.body.password;
 			usuario.genero = req.body.genero;
@@ -225,16 +226,17 @@ router.route('/usuarios') //?app_token
 		
 	});
 	
-//Buscar usuario. No funciona
+//Buscar usuario. 
 router.route('/usuarios/search')
 	.get(function(req, res) {
-		Usuario.findWhere({
-			nombre : req.params.nombre,
-			apellido : req.params.apellido}, function(err, usuario) {
-			if (err)
-				res.send(err);
-			res.json(usuario);
-			});
+		var query = Usuario.find({
+			"nombre" : req.query.nombre,
+			"apellido" : req.query.apellido});
+		query.exec( function(err, usuario) {
+				if (err)
+					res.send(err);
+				res.json(usuario);
+			   });
 	});
 
 //Ver Información de usuario
@@ -254,8 +256,7 @@ router.route('/usuarios/:usuario_id')//?app_token
 			usuario.nombre = req.body.nombre;
 			usuario.apellido = req.body.apellido;
 			usuario.email = req.body.email;
-			usuario.edad = req.body.edad;
-			usuario.genero = req.body.genero;
+			usuario.telefono = req.body.telefono;
 			
 			// save User
 			usuario.save(function(err) {
@@ -314,31 +315,39 @@ router.route('/apartamentos') //?app_token
 		
 	});
 	
-//Buscar apartamento. No funciona
+//Buscar apartamento. Falta calificacion
 router.route('/apartamentos/search')
 	.get(function(req, res) {
-		Apartamento.where({
-			descripcion : req.params.descripcion,
-			direccion_fisica : req.params.direccion_fisica,
-			area : req.params.area,
-			ubicacion_latitud : req.params.ubicacion_latitud,
-			ubicacion_longitud : req.params.ubicacion_longitud,
-			cercania_tec : req.params.cercania_tec,
-			mensualidad: req.params.mensualidad,
-			habitaciones: req.params.habitaciones,
-			titulo: req.params.titulo,
-			genero: req.params.genero,
-			opcion_agua: req.params.opcion_agua,
-			opcion_electricidad: req.params.opcion_electricidad,
-			opcion_seguridad:req.params.opcion_seguridad,
-			opcion_internet: req.body.opcion_internet}, function(err, apartamentos) {
+		console.log(req.query.cercania_tec);
+		var query = Apartamento.find({	"cercania_tec":{$lte:req.query.cercania_tec},
+						"mensualidad":{$gte:req.query.min_mensualidad, $lte:req.query.max_mensualidad},
+						"habitaciones":{$gte:req.query.habitaciones},
+						"genero":req.query.genero
+					});
+		if(req.query.opcion_seguridad=="true"){
+			query.find({"opcion_seguridad":true});
+		}
+		if(req.query.opcion_agua=="true"){
+			query.find({"opcion_agua":true});
+		}
+		if(req.query.opcion_electricidad=="true"){
+			query.find({"opcion_electricidad":true});
+		}
+		if(req.query.opcion_internet=="true"){
+			query.find({"opcion_internet":true});
+		}
+		
+		query.exec(function (err, apartamento) {
+  		// called when the `query.complete` or `query.error` are called
+  		// internally
 			if (err)
 				res.send(err);
-			res.json(apartamentos);
-			});
+			res.json(apartamento);
+		});
+		
 	});
 
-//Ver Información de apartamento
+//Ver Información de apartamento. Falta calificacion
 router.route('/apartamentos/:aparta_id')//?app_token
 	.get(function(req, res) {
 		Apartamento.findById(req.params.aparta_id, function(err, apartamento) {
