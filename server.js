@@ -243,8 +243,10 @@ router.route('/usuarios/search')
 router.route('/usuarios/:usuario_id')//?app_token
 	.get(function(req, res) {
 		Usuario.findById(req.params.usuario_id, function(err, usuario) {
-			if (err)
+			if (err){
+				err.status = 406;
 				res.send(err);
+			}
 			res.json(usuario);
 		});
 	})
