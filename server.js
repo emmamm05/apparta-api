@@ -234,7 +234,7 @@ router.route('/usuarios/search')
 			"apellido" : req.query.apellido});
 		query.exec( function(err, usuario) {
 				if (err)
-					res.send(err);
+					res.send(406,err);
 				res.json(usuario);
 			   });
 	});
