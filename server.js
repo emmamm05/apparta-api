@@ -219,9 +219,11 @@ router.route('/usuarios') //?app_token
 
 		// save the token and check for errors
 		usuario.save(function(err) {
-			if (err)
-				res.send(err);
-			res.json({id:usuario._id, message: 'Usuario created!' });
+			if (err){
+				res.send(406,err);
+			}else{
+				res.json({id:usuario._id, message: 'Usuario created!' });
+			}
 		});
 		
 	});
@@ -309,7 +311,7 @@ router.route('/apartamentos') //?app_token
 		console.log(apartamento);
 		apartamento.save(function(err) {
 			if (err)
-				res.send(err);
+				res.send(406,err);
 			console.log("error"+err);
 			res.json({id:apartamento._id, message: 'Apartamento created!' });
 		});
