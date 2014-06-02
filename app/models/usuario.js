@@ -3,7 +3,7 @@ var Schema       = mongoose.Schema;
 var ObjectId	 = mongoose.Schema.Types.ObjectId;
 
 var Token = new Schema({
-      token 	:{ type: String, required: true }
+      token 	:{ type: String }//, required: true
 });
 
 var Usuario   = new Schema({
@@ -14,7 +14,7 @@ var Usuario   = new Schema({
       email     :{ type: String, required: true},//Falta regexp 
       edad 	:{ type: Number, min: 16 },
       password  :{ type: String},
-      genero	:{ type: String, enum: [ 'Masculino', 'Femenino' ], required: true },
+      genero	:{ type: String, required: true },
       tokens	:[Token], //Conjunto de Tokens
       anunciante:{
 	apartamentos: [ { type : Schema.ObjectId, ref : 'Apartamento' } ]

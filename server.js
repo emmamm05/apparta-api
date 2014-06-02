@@ -201,46 +201,48 @@ router.route('/usuario/user_id/:lista_favoritos')
 */
 
 
+
+
 //http://localhost:8080/api/usuarios
 //Agregar nuevo usuario
 router.route('/usuarios') //?app_token
 	.post(function(req, res) {
 	        console.log(req.body);
-		var usuario = new Usuario(); 		
-			usuario.nombre = req.body.nombre;
-			usuario.apellido = req.body.apellido;
-			usuario.oauth_id = req.body.oauth_id;
-			usuario.email = req.body.email;
-			usuario.telefono = req.body.telefono;
-			usuario.edad = req.body.edad;
-			usuario.password = req.body.password;
-			usuario.genero = req.body.genero;
-		 
-
-		// save the token and check for errors
-		usuario.save(function(err) {
-			if (err){
-				res.send(406,err);
-			}else{
-				res.json({id:usuario._id, message: 'Usuario created!' });
-			}
-		});
+		console.log("POST /usuarios");
+		console.log(req.body);
+		var existe = Usuario.find({ 'oauth_id': req.body.oauth_id });
+		existe.exec(function (err, usuario) {
+	  		// called when the `query.complete` or `query.error` are called
+	  		// internally
+				if (err)
+					res.send(err);
+				else if(usuario.length>=1){
+					console.log(req.body.oauth_id);
+					res.json(usuario);
+					
+					}
+				else if (usuario.length==0){
+				var usuario = new Usuario(); 		
+					usuario.nombre = req.body.nombre;
+					usuario.apellido = req.body.apellido;
+					usuario.oauth_id = req.body.oauth_id;
+					usuario.email = req.body.email;
+					usuario.telefono = req.body.telefono;
+					usuario.edad = req.body.edad;
+					usuario.password = req.body.password;
+					usuario.genero = req.body.genero; 
+	
+					// save the token and check for errors
+					usuario.save(function(err) {
+						if (err)
+							res.send(err);
+						res.json({id:usuario._id, message: 'Usuario created!' });
+					});
+				}
+			});
 		
 	});
 	
-//Buscar usuario. 
-router.route('/usuarios/search')
-	.get(function(req, res) {
-		var query = Usuario.find({
-			"nombre" : req.query.nombre,
-			"apellido" : req.query.apellido});
-		query.exec( function(err, usuario) {
-				if (err)
-					res.send(406,err);
-				res.json(usuario);
-			   });
-	});
-
 //Ver Información de usuario
 router.route('/usuarios/:usuario_id')//?app_token
 	.get(function(req, res) {
@@ -255,7 +257,7 @@ router.route('/usuarios/:usuario_id')//?app_token
 	.put(function(req, res) {
 
 		// use our bear model to find the bear we want
-		Usuario.findById(req.params.usuario_id, function(err, apartamento) {
+		Usuario.findById(req.params.usuario_id, function(err, usuario) {
 			usuario.nombre = req.body.nombre;
 			usuario.apellido = req.body.apellido;
 			usuario.email = req.body.email;
