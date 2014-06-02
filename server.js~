@@ -210,7 +210,7 @@ router.route('/usuarios') //?app_token
 	        console.log(req.body);
 		console.log("POST /usuarios");
 		console.log(req.body);
-		var existe = Usuario.find({ 'oauth_id': req.body.oauth_id });
+		var existe = Usuario.find({ 'oauth_id': req.body.oauth_id, 'proveedor': req.body.proveedor});
 		existe.exec(function (err, usuario) {
 	  		// called when the `query.complete` or `query.error` are called
 	  		// internally
@@ -231,7 +231,7 @@ router.route('/usuarios') //?app_token
 					usuario.edad = req.body.edad;
 					usuario.password = req.body.password;
 					usuario.genero = req.body.genero; 
-	
+					usuario.proveedor = req.body.proveedor;
 					// save the token and check for errors
 					usuario.save(function(err) {
 						if (err)
@@ -247,8 +247,9 @@ router.route('/usuarios') //?app_token
 router.route('/usuarios/:usuario_id')//?app_token
 	.get(function(req, res) {
 		Usuario.findById(req.params.usuario_id, function(err, usuario) {
-			if (err)
-				res.send(err);
+			if (err){
+				res.send(406,err);
+			}
 			res.json(usuario);
 		});
 	})
@@ -256,7 +257,7 @@ router.route('/usuarios/:usuario_id')//?app_token
 	.put(function(req, res) {
 
 		// use our bear model to find the bear we want
-		Usuario.findById(req.params.usuario_id, function(err, apartamento) {
+		Usuario.findById(req.params.usuario_id, function(err, usuario) {
 			usuario.nombre = req.body.nombre;
 			usuario.apellido = req.body.apellido;
 			usuario.email = req.body.email;
@@ -305,14 +306,18 @@ router.route('/apartamentos') //?app_token
 		apartamento.opcion_agua= req.body.opcion_agua;
 		apartamento.opcion_electricidad= req.body.opcion_electricidad;
 		apartamento.opcion_seguridad= req.body.opcion_seguridad;
-		apartamento.opcion_internet= req.body.opcion_internet; 
+		apartamento.opcion_internet= req.body.opcion_internet;
+		apartamento.foto_uno= req.body.foto_uno;
+		apartamento.foto_dos= req.body.foto_dos;
+		apartamento.foto_tres= req.body.foto_tres;
+		apartamento.foto_cuatro= req.body.foto_cuatro; 
 		 
 
 		// save the token and check for errors
 		console.log(apartamento);
 		apartamento.save(function(err) {
 			if (err)
-				res.send(err);
+				res.send(406,err);
 			console.log("error"+err);
 			res.json({id:apartamento._id, message: 'Apartamento created!' });
 		});
@@ -378,7 +383,11 @@ router.route('/apartamentos/:aparta_id')//?app_token
 			apartamento.opcion_agua= req.body.opcion_agua;
 			apartamento.opcion_electricidad= req.body.opcion_electricidad;
 			apartamento.opcion_seguridad= req.body.opcion_seguridad;
-			apartamento.opcion_internet= req.body.opcion_internet; 
+			apartamento.opcion_internet= req.body.opcion_internet;
+			apartamento.foto_uno= req.body.foto_uno;
+			apartamento.foto_dos= req.body.foto_dos;
+			apartamento.foto_tres= req.body.foto_tres;
+			apartamento.foto_cuatro= req.body.foto_cuatro;  
 			// save the apartment
 			apartamento.save(function(err) {
 				if (err)

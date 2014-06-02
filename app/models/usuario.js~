@@ -14,7 +14,8 @@ var Usuario   = new Schema({
       email     :{ type: String, required: true},//Falta regexp 
       edad 	:{ type: Number, min: 16 },
       password  :{ type: String},
-      genero	:{ type: String, enum: [ 'Male', 'Female' ], required: true },
+      genero	:{ type: String, required: true },
+      proveedor :{ type: String, required: true },
       tokens	:[Token], //Conjunto de Tokens
       anunciante:{
 	apartamentos: [ { type : Schema.ObjectId, ref : 'Apartamento' } ]

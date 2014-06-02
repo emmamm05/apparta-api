@@ -15,8 +15,8 @@ var Apartamento = require('./app/models/apartamento');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
-mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
-//mongoose.connect('mongodb://localhost/example');
+//mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
+mongoose.connect('mongodb://localhost/example');
 
 var port = process.env.PORT || 8080; 		// set our port
 
@@ -210,7 +210,7 @@ router.route('/usuarios') //?app_token
 	        console.log(req.body);
 		console.log("POST /usuarios");
 		console.log(req.body);
-		var existe = Usuario.find({ 'oauth_id': req.body.oauth_id });
+		var existe = Usuario.find({ 'oauth_id': req.body.oauth_id, 'oauth_proveedor': req.body.proveedor});
 		existe.exec(function (err, usuario) {
 	  		// called when the `query.complete` or `query.error` are called
 	  		// internally
@@ -231,7 +231,7 @@ router.route('/usuarios') //?app_token
 					usuario.edad = req.body.edad;
 					usuario.password = req.body.password;
 					usuario.genero = req.body.genero; 
-	
+					usuario.oauth_proveedor = req.body.oauth_proveedor;
 					// save the token and check for errors
 					usuario.save(function(err) {
 						if (err)
@@ -306,7 +306,11 @@ router.route('/apartamentos') //?app_token
 		apartamento.opcion_agua= req.body.opcion_agua;
 		apartamento.opcion_electricidad= req.body.opcion_electricidad;
 		apartamento.opcion_seguridad= req.body.opcion_seguridad;
-		apartamento.opcion_internet= req.body.opcion_internet; 
+		apartamento.opcion_internet= req.body.opcion_internet;
+		apartamento.foto_uno= req.body.foto_uno;
+		apartamento.foto_dos= req.body.foto_dos;
+		apartamento.foto_tres= req.body.foto_tres;
+		apartamento.foto_cuatro= req.body.foto_cuatro; 
 		 
 
 		// save the token and check for errors
@@ -379,7 +383,11 @@ router.route('/apartamentos/:aparta_id')//?app_token
 			apartamento.opcion_agua= req.body.opcion_agua;
 			apartamento.opcion_electricidad= req.body.opcion_electricidad;
 			apartamento.opcion_seguridad= req.body.opcion_seguridad;
-			apartamento.opcion_internet= req.body.opcion_internet; 
+			apartamento.opcion_internet= req.body.opcion_internet;
+			apartamento.foto_uno= req.body.foto_uno;
+			apartamento.foto_dos= req.body.foto_dos;
+			apartamento.foto_tres= req.body.foto_tres;
+			apartamento.foto_cuatro= req.body.foto_cuatro;  
 			// save the apartment
 			apartamento.save(function(err) {
 				if (err)
