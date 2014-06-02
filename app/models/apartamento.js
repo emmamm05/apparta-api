@@ -38,7 +38,11 @@ var Apartamento   = new Schema({
       opcion_electricidad: { type: Boolean, required: true},
 	// fin de actualizacion de atributos
       opcion_seguridad: { type: Boolean, required: true },
-      opcion_internet: { type: Boolean, required: true}
+      opcion_internet: { type: Boolean, required: true},
+      foto_uno: {type: String},
+      foto_dos: {type: String},
+      foto_tres: {type: String},
+      foto_cuatro: {type: String}
 });
 //Falta forzar algunos numeros en decimales
 
