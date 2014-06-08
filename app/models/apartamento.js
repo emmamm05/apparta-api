@@ -16,7 +16,12 @@ var Comentario = new Schema({
 
 var Calificacion = new Schema({
       calificacion: { type: Number, min: 1, max: 5 },
-      autor: {type: ObjectId, ref: 'Usuario'},
+      autor: {type: ObjectId, ref: 'Usuario'}
+});
+
+var Interesado = new Schema({
+      interesado_id: {type: Object, ref: 'Usuario'},
+      
 });
 
 var Apartamento   = new Schema({
@@ -42,7 +47,8 @@ var Apartamento   = new Schema({
       foto_uno: {type: String},
       foto_dos: {type: String},
       foto_tres: {type: String},
-      foto_cuatro: {type: String}
+      foto_cuatro: {type: String},
+      interesados: [Interesado]
 });
 //Falta forzar algunos numeros en decimales
 

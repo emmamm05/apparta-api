@@ -15,7 +15,7 @@ var Usuario   = new Schema({
       edad 	:{ type: Number, min: 16 },
       password  :{ type: String},
       genero	:{ type: String, required: true },
-      proveedor :{ type: String, required: true },
+      oauth_proveedor :{ type: String, required: true },
       tokens	:[Token], //Conjunto de Tokens
       anunciante:{
 	apartamentos: [ { type : Schema.ObjectId, ref : 'Apartamento' } ]
