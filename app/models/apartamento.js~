@@ -20,7 +20,7 @@ var Calificacion = new Schema({
 });
 
 var Interesado = new Schema({
-      interesado_id: {type: ObjectId, ref: 'Usuario'},
+      interesado_id: {type: ObjectId, ref: 'Usuario'}
       
 });
 
@@ -53,4 +53,5 @@ var Apartamento   = new Schema({
 //Falta forzar algunos numeros en decimales
 
 module.exports = mongoose.model('Apartamento', Apartamento);
-
+module.exports = mongoose.model('Interesado', Interesado);
+module.exports = mongoose.model('Calificacion', Calificacion);

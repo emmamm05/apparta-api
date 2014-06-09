@@ -339,18 +339,17 @@ router.route('/interesados')
 	 	
 		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, apartamento) {
 				if (err)
-					res.send(err);
-				apartamento.interesados=[interesado];
-				
-				//res.json(apartamento);
+					res.send(err);		
 			});
-		
+		apartamento.update({ $push: { interesados: usuario } });
 		interesado.save(function(err) {
 			if (err)
 				res.send(err);
 			
 		});
-		res.json(interesado);
+		var hola = Apartamento.findById(req.body.aparta_id).populate(apartamento.interesados).exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
+		
+		//res.json(interesado);
 	});
 //Ver interesados del apartamento
 router.route('/apartamentos/interesados/:aparta_id')
@@ -359,7 +358,7 @@ router.route('/apartamentos/interesados/:aparta_id')
 			if (err)
 				res.send(err);
 
-			res.json(apartamento);
+			res.json(apartamento.interesados);
 		});
 	});
 
