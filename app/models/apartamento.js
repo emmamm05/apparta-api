@@ -19,11 +19,6 @@ var Calificacion = new Schema({
       autor: {type: ObjectId, ref: 'Usuario'}
 });
 
-var Interesado = new Schema({
-      interesado_id: {type: ObjectId, ref: 'Usuario'}
-      
-});
-
 var Apartamento   = new Schema({
       descripcion: { type: String, required: true },
       direccion_fisica: { type: String, required: true },

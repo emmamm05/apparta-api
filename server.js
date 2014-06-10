@@ -329,7 +329,7 @@ router.route('/apartamentos/:aparta_id')//?app_token
 			res.json({ message: 'Successfully deleted' });
 		});
 	});
-//Agregar interesados del apartamento
+//Agregar interesados del apartamento//Bug arreglar
 router.route('/interesados')
 	.put(function(req, res) {
 		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
@@ -341,25 +341,42 @@ router.route('/interesados')
 						res.send(err);
 					console.log('Usuario encontrado');
 					aparta.interesados.addToSet(user._id);
-					aparta.save(function(err) {
+					aparta.save(function(err, resultado) {
 							if (err)
 								res.send(err);
 
-							res.json(aparta);
 						});
 					
-					});
+					});	
 				
-					
-				
-				});
-
+				}).populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
 	
-		//apartamento.populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
-		
-		
 	});
-//Ver interesados del apartamento
+
+//Borrar interesados del apartamento//Bug arreglar
+router.route('/interesados/eliminar')
+	.put(function(req, res) {
+		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
+				if (err)
+					res.send(err);
+				console.log('Aparta encontrado');
+				var usuario = Usuario.findById(req.body.usuario_id, function(err, user) {
+					if (err)
+						res.send(err);
+					console.log('Usuario encontrado');
+					aparta.interesados.pull(user._id);
+					aparta.save(function(err, resultado) {
+							if (err)
+								res.send(err);
+
+						});
+					
+					});	
+				
+				}).populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
+	
+	});
+//Ver listas de apartamentos de interes
 router.route('/apartamentos/interesados/:aparta_id')
 	.get(function(req, res) {
 		Apartamento.findById(req.params.aparta_id, function(err, apartamento) {
@@ -370,7 +387,7 @@ router.route('/apartamentos/interesados/:aparta_id')
 		});
 	});
 
-//Borrar interesados del apartamento
+
 
 //Agregar calificación
 
