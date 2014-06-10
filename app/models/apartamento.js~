@@ -48,7 +48,7 @@ var Apartamento   = new Schema({
       foto_dos: {type: String},
       foto_tres: {type: String},
       foto_cuatro: {type: String},
-      interesados: [Interesado]
+      interesados: [{type: ObjectId, ref: 'Usuario'}]
 });
 //Falta forzar algunos numeros en decimales
 

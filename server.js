@@ -127,19 +127,21 @@ router.route('/usuarios') //?app_token
 	        console.log(req.body);
 		console.log("POST /usuarios");
 		console.log(req.body);
-		var existe = Usuario.find({ 'oauth_id': req.body.oauth_id, 'oauth_proveedor': req.body.proveedor});
-		existe.exec(function (err, usuario) {
+		var existe = Usuario.find({ 'oauth_id': req.body.oauth_id, 'oauth_proveedor': req.body.oauth_proveedor});
+		existe.exec(function (err, resultado) {
 	  		// called when the `query.complete` or `query.error` are called
 	  		// internally
 				if (err)
 					res.send(err);
-				else if(usuario.length>=1){
+				else if(resultado.length>=1){
 					console.log(req.body.oauth_id);
-					res.json(usuario);
+					console.log(req.body.oauth_proveedor);
+					res.json(resultado);
 					
 					}
-				else if (usuario.length==0){
-				var usuario = new Usuario(); 		
+				else if (resultado.length==0){
+				var usuario = new Usuario(); 
+					console.log(req.body.oauth_id);		
 					usuario.nombre = req.body.nombre;
 					usuario.apellido = req.body.apellido;
 					usuario.oauth_id = req.body.oauth_id;
@@ -153,7 +155,7 @@ router.route('/usuarios') //?app_token
 					usuario.save(function(err) {
 						if (err)
 							res.send(err);
-						res.json(usuario);
+						res.json({id:usuario._id, message: 'Usuario created!' });
 					});
 				}
 			});
@@ -330,26 +332,31 @@ router.route('/apartamentos/:aparta_id')//?app_token
 //Agregar interesados del apartamento
 router.route('/interesados')
 	.put(function(req, res) {
-		var usuario = Usuario.findById(req.body.usuario_id, function(err, usuario) {
+
+		var usuario = Usuario.findById(req.body.usuario_id, function(err, resultado) {
 				if (err)
 					res.send(err);
+				Apartamento.findById(req.body.aparta_id, function(err, aparta) {
+						if (err)
+							res.send(err);	
+						aparta.update({ $push: { interesados: resultado} });	
+						res.json(aparta);
+					});
 				});
-		var interesado = new Interesado();
-		interesado.interesado_id=usuario;
-	 	
-		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, apartamento) {
-				if (err)
-					res.send(err);		
-			});
-		apartamento.update({ $push: { interesados: usuario } });
-		interesado.save(function(err) {
-			if (err)
-				res.send(err);
-			
-		});
-		var hola = Apartamento.findById(req.body.aparta_id).populate(apartamento.interesados).exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
 		
-		//res.json(interesado);
+		//var interesado = new Interesado();
+		//interesado.interesado_id=usuario;
+	 	//interesado.save(function(err) {
+		//	if (err)
+		//		res.send(err);
+			
+		//});
+		
+		//apartamento.update({ $push: { interesados: usuario} });
+		
+		//apartamento.populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(interesado);});
+		
+		
 	});
 //Ver interesados del apartamento
 router.route('/apartamentos/interesados/:aparta_id')

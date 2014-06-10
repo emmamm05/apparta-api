@@ -23,4 +23,4 @@ var Usuario   = new Schema({
 });
 
 module.exports = mongoose.model('Usuario', Usuario);
-module.exports = mongoose.model('Token', Token); 
+

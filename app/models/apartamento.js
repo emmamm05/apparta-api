@@ -53,5 +53,4 @@ var Apartamento   = new Schema({
 //Falta forzar algunos numeros en decimales
 
 module.exports = mongoose.model('Apartamento', Apartamento);
-module.exports = mongoose.model('Interesado', Interesado);
-module.exports = mongoose.model('Calificacion', Calificacion);
+
