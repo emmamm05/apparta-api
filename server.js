@@ -344,13 +344,14 @@ router.route('/interesados')
 					aparta.save(function(err, resultado) {
 							if (err)
 								res.send(err);
-
+													Apartamento.findById(req.body.aparta_id, function(err, elim){if (err)
+					res.send(err);}).populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
 						});
 					
 					});	
 				
-				}).populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
-	
+				})
+		
 	});
 
 //Borrar interesados del apartamento//Bug arreglar
@@ -368,12 +369,13 @@ router.route('/interesados/eliminar')
 					aparta.save(function(err, resultado) {
 							if (err)
 								res.send(err);
-
+								Apartamento.findById(req.body.aparta_id, function(err, elim){if (err)
+					res.send(err);}).populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
 						});
 					
 					});	
 				
-				}).populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
+				})
 	
 	});
 //Ver listas de apartamentos de interes
@@ -395,7 +397,6 @@ router.route('/apartamentos/interesados/:aparta_id')
 //Actualizar calificación
 //Cambiar calificación
 //Agregar comentarios
-//Ver comentarios
 //Borrar comentarios
 
 // REGISTER OUR ROUTES -------------------------------
