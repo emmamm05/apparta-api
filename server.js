@@ -332,29 +332,30 @@ router.route('/apartamentos/:aparta_id')//?app_token
 //Agregar interesados del apartamento
 router.route('/interesados')
 	.put(function(req, res) {
-
-		var usuario = Usuario.findById(req.body.usuario_id, function(err, resultado) {
+		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
 				if (err)
 					res.send(err);
-				Apartamento.findById(req.body.aparta_id, function(err, aparta) {
-						if (err)
-							res.send(err);	
-						aparta.update({ $push: { interesados: resultado} });	
-						res.json(aparta);
+				console.log('Aparta encontrado');
+				var usuario = Usuario.findById(req.body.usuario_id, function(err, user) {
+					if (err)
+						res.send(err);
+					console.log('Usuario encontrado');
+					aparta.interesados.addToSet(user._id);
+					aparta.save(function(err) {
+							if (err)
+								res.send(err);
+
+							res.json(aparta);
+						});
+					
 					});
+				
+					
+				
 				});
-		
-		//var interesado = new Interesado();
-		//interesado.interesado_id=usuario;
-	 	//interesado.save(function(err) {
-		//	if (err)
-		//		res.send(err);
-			
-		//});
-		
-		//apartamento.update({ $push: { interesados: usuario} });
-		
-		//apartamento.populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(interesado);});
+
+	
+		//apartamento.populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
 		
 		
 	});
