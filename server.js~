@@ -357,11 +357,15 @@ router.route('/interesados/eliminar')
 router.route('/interesados/:user_id')
 	.get(function(req, res) {
 		
-		Apartamento.find().populate('interesados'). exec(function(err, resultado) {//{'interesados._id': req.params.user_id }
-			if (err)
-				res.send(err);
-			console.log(resultado);
-			res.json(resultado);	
+		Usuario.findById(req.params.user_id, function(err, user) {
+						if (err)
+							res.send(err);
+						Apartamento.find({'_id':{ $in: user.interes }}).populate('interesados').exec(function(err, aparta){
+											if(err)
+												res.send(err);
+											console.log(aparta);
+											res.json(aparta);
+						});
 		});
 	});
 
