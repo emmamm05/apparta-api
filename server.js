@@ -223,13 +223,11 @@ router.route('/apartamentos/search')
 		if(req.query.opcion_internet=="true"){
 			query.find({"opcion_internet":true});
 		}
-		
 		query.exec(function (err, apartamento) {
-  		// called when the `query.complete` or `query.error` are called
-  		// internally
-			if (err)
-				res.send(err);
-			res.json(apartamento);
+  			console.log(apartamento);
+  			if (err)
+  				res.send(err);
+	        res.send(apartamento);  
 		});
 		
 	});
@@ -247,8 +245,6 @@ router.route('/apartamentos/:aparta_id')//?app_token
 	})
 //Modificar Información de apartamento
 	.put(function(req, res) {
-
-		// use our bear model to find the bear we want
 		Apartamento.findById(req.params.aparta_id, function(err, apartamento) {
 			apartamento.descripcion = req.body.descripcion;
 			apartamento.direccion_fisica = req.body.direccion_fisica;
@@ -272,7 +268,6 @@ router.route('/apartamentos/:aparta_id')//?app_token
 			apartamento.save(function(err) {
 				if (err)
 					res.send(err);
-
 				res.json({message: 'Apartamento updated!' });
 			});
 
