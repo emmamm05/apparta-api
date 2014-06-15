@@ -11,7 +11,7 @@ var mongoose   = require('mongoose');
 var Usuario    = require('./app/models/usuario');
 var Token    = require('./app/models/usuario');
 var Apartamento = require('./app/models/apartamento');
-var Interesado = require('./app/models/apartamento');
+var Calificacion = require('./app/models/calificacion');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
@@ -344,12 +344,16 @@ router.route('/interesados')
 					aparta.save(function(err, resultado) {
 							if (err)
 								res.send(err);
-
+								Apartamento.findById(req.body.aparta_id, function(err, elim){
+														if (err)
+															res.send(err);})
+										.populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); 
+															res.json(apartamento);});
 						});
 					
 					});	
 				
-				}).populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
+				});
 		
 	});
 
@@ -368,12 +372,16 @@ router.route('/interesados/eliminar')
 					aparta.save(function(err, resultado) {
 							if (err)
 								res.send(err);
-
+								Apartamento.findById(req.body.aparta_id, function(err, elim){
+														if (err)
+															res.send(err);})
+									.populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); 
+															res.json(apartamento);});
 						});
 					
 					});	
 				
-				}).populate('interesados').exec(function(err, apartamento){console.log(apartamento.interesados); res.json(apartamento);});
+				});
 	
 	});
 //Ver listas de apartamentos de interes
@@ -389,11 +397,54 @@ router.route('/apartamentos/interesados/:aparta_id')
 
 
 
-//Agregar calificación
+//Actualizar al agregar calificación
+router.route('/calificacion')
+	.put(function(req, res) {
+		
+		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
+			if (err)
+					res.send(err);
+			var usuario = Usuario.findById(req.body.usuario_id, function(err, user) {
+				if (err)
+					res.send(err);
+				console.log('usuario find');
+				var calificacion = new Calificacion();
+				calificacion.calificacion=req.body.calificacion;
+				calificacion.autor=user._id;
+				calificacion.save(function(err, result) {
+						if (err)
+							res.send(err);
+						console.log('calificacion find');
+				aparta.calificaciones.push(result._id);
+						console.log(result);	
+				aparta.save(function(err, resultado) {
+						if (err)
+							res.send(err);
+						
+						//res.json(resultado);
+							/Apartamento.findById(req.body.aparta_id, function(err, elim){
+													if (err)
+														res.send(err);})
+								.populate('calificaciones').exec(function(err, apartamento){console.log(apartamento.calificaciones); 
+														res.json(apartamento);});
+					
+						});
+				});
+				});
+							
+			});
+			
+					
+					
+					
+	
+	});
 
-
-//Actualizar calificación
-//Cambiar calificación
+//Actualizar al cambiar calificación
+router.route('/calificacion/cambiar')
+	.put(function(req, res) {
+		
+	});
 //Agregar comentarios
 //Borrar comentarios
 

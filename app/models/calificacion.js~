@@ -1,0 +1,5 @@
+var Calificacion = new Schema({
+      calificacion: { type: Number, min: 1, max: 5 },
+      autor: {type: ObjectId, ref: 'Usuario'}
+});
+

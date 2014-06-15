@@ -19,11 +19,6 @@ var Calificacion = new Schema({
       autor: {type: ObjectId, ref: 'Usuario'}
 });
 
-var Interesado = new Schema({
-      interesado_id: {type: ObjectId, ref: 'Usuario'}
-      
-});
-
 var Apartamento   = new Schema({
       descripcion: { type: String, required: true },
       direccion_fisica: { type: String, required: true },
@@ -32,7 +27,7 @@ var Apartamento   = new Schema({
       ubicacion_longitud:{ type: Number, required: true },
       cercania_tec: { type: Number, required: true },
       comentarios: [Comentario],
-      calificaciones: [Calificacion],
+      calificaciones: [{type: ObjectId, ref: 'Calificacion'}],
       calificacion: { type: Number },
 	// actualizacion de atributos
       mensualidad: { type: Number, required: true},	//desde 25 000 hasta 500 000
@@ -53,4 +48,6 @@ var Apartamento   = new Schema({
 //Falta forzar algunos numeros en decimales
 
 module.exports = mongoose.model('Apartamento', Apartamento);
+
+module.exports = mongoose.model('Calificacion', Calificacion);
 
