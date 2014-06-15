@@ -6,14 +6,6 @@ function longitud_comentario (str) {
   return str.length < 120;
 };
 
-var Comentario = new Schema({
-     contenido: { type: String, required: true, validate: [longitud_comentario, 'comentario muy extenso'] },
-     autor: {type: ObjectId, ref: 'Usuario'},
-     fecha_publicacion : { type : Date }
-
-
-});
-
 
 var Apartamento   = new Schema({
       descripcion: { type: String, required: true },
@@ -22,7 +14,7 @@ var Apartamento   = new Schema({
       ubicacion_latitud:{ type: Number, required: true },
       ubicacion_longitud:{ type: Number, required: true },
       cercania_tec: { type: Number, required: true },
-      comentarios: [Comentario],
+      comentarios: [{type: ObjectId, ref: 'Comentario'}],
       calificaciones: [{type: ObjectId, ref: 'Calificacion'}],
       calificacion: { type: Number },
 	// actualizacion de atributos
@@ -39,7 +31,8 @@ var Apartamento   = new Schema({
       foto_dos: {type: String},
       foto_tres: {type: String},
       foto_cuatro: {type: String},
-      interesados: [{type: ObjectId, ref: 'Usuario'}]
+      interesados: [{type: ObjectId, ref: 'Usuario'}],
+      fecha_creacion : { type : Date , default: Date.now}	
 });
 //Falta forzar algunos numeros en decimales
 

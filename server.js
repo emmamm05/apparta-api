@@ -12,6 +12,7 @@ var Usuario    = require('./app/models/usuario');
 var Token    = require('./app/models/usuario');
 var Apartamento = require('./app/models/apartamento');
 var Calificacion = require('./app/models/calificacion');
+var Comentario = require('./app/models/comentario');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
@@ -201,14 +202,15 @@ router.route('/apartamentos') //?app_token
 	});
 
 	
-//Buscar apartamento. Falta calificacion
+//Buscar apartamento.
 router.route('/apartamentos/search')
 	.get(function(req, res) {
 		console.log(req.query.cercania_tec);
 		var query = Apartamento.find({	"cercania_tec":{$lte:req.query.cercania_tec},
 						"mensualidad":{$gte:req.query.min_mensualidad, $lte:req.query.max_mensualidad},
 						"habitaciones":{$gte:req.query.habitaciones},
-						"genero":req.query.genero
+						"genero":req.query.genero,
+						"calificacion":req.body.calificacion
 					});
 		if(req.query.opcion_seguridad=="true"){
 			query.find({"opcion_seguridad":true});
@@ -233,14 +235,16 @@ router.route('/apartamentos/search')
 		
 	});
 
-//Ver Información de apartamento. Falta calificacion
+//Ver Información de apartamento. 
 router.route('/apartamentos/:aparta_id')//?app_token
 	.get(function(req, res) {
 		Apartamento.findById(req.params.aparta_id, function(err, apartamento) {
 			if (err)
 				res.send(err);
-			res.json(apartamento);
-		});
+			
+				
+		}).populate('comentarios').exec(function(err, apartamento){console.log(apartamento.comentarios); 
+										res.json(apartamento);});
 	})
 //Modificar Información de apartamento
 	.put(function(req, res) {
@@ -395,7 +399,7 @@ router.route('/calificacion')
 													total+=actualiza[i].calificacion;
 												}
 												console.log(total);
-												aparta.calificacion=total/actualiza.length;
+												aparta.calificacion=Math.floor(total/actualiza.length);
 												aparta.save(function(err) {
 													if (err)
 														res.send(err);
@@ -423,7 +427,7 @@ router.route('/calificacion')
 													total+=actualiza[i].calificacion;
 												}
 												console.log(total);
-												aparta.calificacion=total/actualiza.length;
+												aparta.calificacion=Math.floor(total/actualiza.length);
 												aparta.save(function(err) {
 													if (err)
 														res.send(err);
@@ -443,11 +447,63 @@ router.route('/calificacion')
 	});
 
 
-//Agregar comentarios
-//Borrar comentarios
-//Lista Recientes
-//Lista Favoritos
+//Agregar comentarios. Falta populate de autores
+router.route('/comentario')
+	.put(function(req, res) {
+		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
+				if (err)
+					res.send(err);
+				console.log('Aparta encontrado');
+				var usuario = Usuario.findById(req.body.usuario_id, function(err, user) {
+					if (err)
+						res.send(err);
+					console.log('Usuario encontrado');
+					var comentario = new Comentario();
+					comentario.contenido=req.body.contenido;
+					comentario.autor=user._id;
+					comentario.save(function(err, result) {
+								if (err)
+									res.send(err);
+						console.log(result);
+						aparta.comentarios.push(result._id);
+						aparta.save(function(err, resultado) {
+								if (err)
+									res.send(err);
+									Apartamento.findById(req.body.aparta_id, function(err, elim){
+															if (err)
+																res.send(err);})
+										.populate('comentarios').exec(function(err, apartamento){console.log(apartamento.comentarios); 
+																res.json(apartamento);});
+							});
+						});
 
+					
+					});	
+				
+				});
+	
+	});
+
+//Lista Recientes
+router.route('/recientes')
+	.get(function(req, res) {
+		Apartamento.find({}).sort({fecha_creacion:  'desc'}).limit(4).exec(function(err, resultado) {
+								if (err)
+									res.send(err);
+								res.json(resultado);
+								
+		});
+	});
+//Lista Favoritos
+router.route('/favoritos')
+	.get(function(req, res) {
+		Apartamento.find({}).sort({calificacion:  'desc'}).limit(4).exec(function(err, resultado) {
+								if (err)
+									res.send(err);
+								res.json(resultado);
+								
+		});
+	});
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
