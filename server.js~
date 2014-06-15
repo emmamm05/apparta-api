@@ -300,6 +300,10 @@ router.route('/interesados')
 				var usuario = Usuario.findById(req.body.usuario_id, function(err, user) {
 					if (err)
 						res.send(err);
+					user.interes.addToSet(aparta._id);
+					user.save(function(err) {
+							if (err)
+								res.send(err);});
 					console.log('Usuario encontrado');
 					aparta.interesados.addToSet(user._id);
 					aparta.save(function(err, resultado) {
@@ -328,6 +332,10 @@ router.route('/interesados/eliminar')
 				var usuario = Usuario.findById(req.body.usuario_id, function(err, user) {
 					if (err)
 						res.send(err);
+					user.interes.pull(aparta._id);
+					user.save(function(err) {
+							if (err)
+								res.send(err);});
 					console.log('Usuario encontrado');
 					aparta.interesados.pull(user._id);
 					aparta.save(function(err, resultado) {
@@ -346,22 +354,15 @@ router.route('/interesados/eliminar')
 	
 	});
 //Ver listas de apartamentos de interes
-router.route('/apartamentos/interesados/:user_id')
+router.route('/interesados/:user_id')
 	.get(function(req, res) {
-		Usuario.findById(req.params.user_id, function(err,user){
-							if (err)
-								res.send(err)
-							Apartamento.find({'interesados':{$in: [{'autor': user._id}]}}). exec(function(err, resultado) {
-								if (err)
-									res.send(err);
-								res.json(resultado);
-								
-							});
-
-
-
-		});
 		
+		Apartamento.find().populate('interesados'). exec(function(err, resultado) {//{'interesados._id': req.params.user_id }
+			if (err)
+				res.send(err);
+			console.log(resultado);
+			res.json(resultado);	
+		});
 	});
 
 

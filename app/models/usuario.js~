@@ -12,7 +12,7 @@ var Usuario   = new Schema({
       oauth_id 	:{ type: String, required: true},
       telefono 	:{ type: String, required: true},
       email     :{ type: String, required: true},//Falta regexp 
-      edad 	:{ type: Number, min: 16 },
+      cumpleanos:{ type: Date },
       password  :{ type: String},
       genero	:{ type: String, required: true },
       oauth_proveedor :{ type: String, required: true },//facebook o google
