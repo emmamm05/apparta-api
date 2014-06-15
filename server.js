@@ -16,8 +16,8 @@ var Comentario = require('./app/models/comentario');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
-//mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
-mongoose.connect('mongodb://localhost/example');
+mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
+//mongoose.connect('mongodb://localhost/example');
 
 var port = process.env.PORT || 8080; 		// set our port
 
@@ -318,7 +318,7 @@ router.route('/interesados')
 		
 	});
 
-//Borrar interesados del apartamento//Bug arreglar
+//Borrar interesados del apartamento
 router.route('/interesados/eliminar')
 	.put(function(req, res) {
 		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
@@ -346,15 +346,23 @@ router.route('/interesados/eliminar')
 	
 	});
 //Ver listas de apartamentos de interes
-router.route('/apartamentos/interesados/:aparta_id')
+/*router.route('/apartamentos/interesados/:user_id')
 	.get(function(req, res) {
-		Apartamento.findById(req.params.aparta_id, function(err, apartamento) {
-			if (err)
-				res.send(err);
+		Usuario.findById(req.params.user_id, function(err,user){
+							if (err)
+								res.send(err)
+							Apartamento.find({'interesados':{$in: [{'autor': user._id}]}}). exec(function(err, resultado) {
+								if (err)
+									res.send(err);
+								res.json(resultado);
+								
+							});
 
-			res.json(apartamento.interesados);
+
+
 		});
-	});
+		
+	});*/
 
 
 

@@ -318,7 +318,7 @@ router.route('/interesados')
 		
 	});
 
-//Borrar interesados del apartamento//Bug arreglar
+//Borrar interesados del apartamento
 router.route('/interesados/eliminar')
 	.put(function(req, res) {
 		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
@@ -346,14 +346,22 @@ router.route('/interesados/eliminar')
 	
 	});
 //Ver listas de apartamentos de interes
-router.route('/apartamentos/interesados/:aparta_id')
+router.route('/apartamentos/interesados/:user_id')
 	.get(function(req, res) {
-		Apartamento.findById(req.params.aparta_id, function(err, apartamento) {
-			if (err)
-				res.send(err);
+		Usuario.findById(req.params.user_id, function(err,user){
+							if (err)
+								res.send(err)
+							Apartamento.find({'interesados':{$in: [{'autor': user._id}]}}). exec(function(err, resultado) {
+								if (err)
+									res.send(err);
+								res.json(resultado);
+								
+							});
 
-			res.json(apartamento.interesados);
+
+
 		});
+		
 	});
 
 
@@ -497,7 +505,7 @@ router.route('/recientes')
 //Lista Favoritos
 router.route('/favoritos')
 	.get(function(req, res) {
-		Apartamento.find({}).sort({calificacion:  'asc'}).limit(4).exec(function(err, resultado) {
+		Apartamento.find({}).sort({calificacion:  'desc'}).limit(4).exec(function(err, resultado) {
 								if (err)
 									res.send(err);
 								res.json(resultado);
