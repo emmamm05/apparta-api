@@ -354,7 +354,7 @@ router.route('/apartamentos/interesados/:aparta_id')
 
 
 
-//Actualizar al agregar calificación
+//Agregar y Actualizar al agregar calificación
 router.route('/calificacion')
 	.put(function(req, res) {
 		
@@ -387,13 +387,24 @@ router.route('/calificacion')
 								aparta.save(function(err, resultado) {
 								if (err)
 									res.send(err);
-						
-								//res.json(resultado);
-									Apartamento.findById(req.body.aparta_id, function(err, elim){
+										Calificacion.find({'aparta':req.body.aparta_id}).exec(function(err, actualiza){
+												if (err)
+												     res.send(err);
+												var total=0;
+												for(var i=0;i<actualiza.length;i++){
+													total+=actualiza[i].calificacion;
+												}
+												console.log(total);
+												aparta.calificacion=total/actualiza.length;
+												aparta.save(function(err) {
+													if (err)
+														res.send(err);
+                                                                                 Apartamento.findById(req.body.aparta_id, function(err, elim){
 															if (err)
 																res.send(err);})
 										.populate('calificaciones').exec(function(err, apartamento){console.log(apartamento.calificaciones); 
 																res.json(apartamento);});
+													});});
 					
 								});
 							});
@@ -404,32 +415,34 @@ router.route('/calificacion')
 								modify.save(function(err, mod) {
 									if (err)
 										res.send(err);
-									Apartamento.findById(req.body.aparta_id, function(err, elim){
+									Calificacion.find({'aparta':req.body.aparta_id}).exec(function(err, actualiza){
+												if (err)
+												     res.send(err);
+												var total=0;
+												for(var i=0;i<actualiza.length;i++){
+													total+=actualiza[i].calificacion;
+												}
+												console.log(total);
+												aparta.calificacion=total/actualiza.length;
+												aparta.save(function(err) {
+													if (err)
+														res.send(err);
+                                                                                 Apartamento.findById(req.body.aparta_id, function(err, elim){
 															if (err)
 																res.send(err);})
 										.populate('calificaciones').exec(function(err, apartamento){console.log(apartamento.calificaciones); 
 																res.json(apartamento);});
-								});
-								
-					});}
-
-				});
-				
-				});
-							
-			});
-			
-					
-					
-					
+													});});
+									
+								});	
+						});}
+					});
+				});			
+			});			
 	
 	});
 
-//Actualizar al cambiar calificación
-router.route('/calificacion/cambiar')
-	.put(function(req, res) {
-		
-	});
+
 //Agregar comentarios
 //Borrar comentarios
 //Lista Recientes
