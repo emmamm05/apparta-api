@@ -75,49 +75,6 @@ router.route('/tokens/:token_id')
 		});
 	});
 
-/*
-
-
-//Ver Lista de Favoritos
-router.route('/usuario/user_id/:lista_favoritos?user_token&app_token')
-	.get(function(req, res) {
-		Apartamento.findById(req.params.user_id, function(err, apartamento) {
-			if (err)
-				res.send(err);
-			res.json(apartamento);
-		});
-	});
-//Agregar a Lista de Favoritos
-router.route('/usuario/user_id/:lista_favoritos')
-	// create a token (accessed at POST http://localhost:8080/api/tokens)
-	.post(function(req, res) {
-		
-		var tokens = new Token(); 		// create a new instance of the Token model
-		tokens.token = req.body.token;  // set the tokens token (comes from the request)
-
-		// save the token and check for errors
-		tokens.save(function(err) {
-			if (err)
-				res.send(err);
-
-			res.json({ message: 'Token created!' });
-		});
-		
-	})
-//Remover de Lista de Favoritos
-	.delete(function(req, res) {router.route('/tokens')
-		Token.remove({
-			token_id: req.params.user_id
-		}, function(err, token) {
-			if (err)
-				res.send(err);
-
-			res.json({ message: 'Successfully deleted' });
-		});
-	});
-*/
-
-
 
 
 //http://localhost:8080/api/usuarios
@@ -147,7 +104,7 @@ router.route('/usuarios') //?app_token
 					usuario.oauth_id = req.body.oauth_id;
 					usuario.email = req.body.email;
 					usuario.telefono = req.body.telefono;
-					usuario.edad = req.body.edad;
+					usuario.cumpleanos = req.body.cumpleanos;
 					usuario.password = req.body.password;
 					usuario.genero = req.body.genero; 
 					usuario.oauth_proveedor = req.body.oauth_proveedor;
@@ -408,28 +365,55 @@ router.route('/calificacion')
 				if (err)
 					res.send(err);
 				console.log('usuario find');
-				var calificacion = new Calificacion();
-				calificacion.calificacion=req.body.calificacion;
-				calificacion.autor=user._id;
-				calificacion.save(function(err, result) {
-						if (err)
-							res.send(err);
-						console.log('calificacion find');
-				aparta.calificaciones.push(result._id);
-						console.log(result);	
-				aparta.save(function(err, resultado) {
-						if (err)
-							res.send(err);
-						
-						//res.json(resultado);
-							/Apartamento.findById(req.body.aparta_id, function(err, elim){
-													if (err)
-														res.send(err);})
-								.populate('calificaciones').exec(function(err, apartamento){console.log(apartamento.calificaciones); 
-														res.json(apartamento);});
+				
+				var existe = Calificacion.find({'autor':user._id, 'aparta':aparta._id});
+				existe.exec(function (err, exist) {
+		  		// called when the `query.complete` or `query.error` are called
+		  		// internally
 					
-						});
+					if (err)
+						res.send(err);
+					else if (exist.length==0){
+						var calificacion = new Calificacion();
+						calificacion.calificacion=req.body.calificacion;
+						calificacion.autor=user._id;
+						calificacion.aparta=aparta._id
+						calificacion.save(function(err, result) {
+								if (err)
+									res.send(err);
+								console.log('calificacion find');
+								aparta.calificaciones.addToSet(result._id);
+								console.log(result);	
+								aparta.save(function(err, resultado) {
+								if (err)
+									res.send(err);
+						
+								//res.json(resultado);
+									Apartamento.findById(req.body.aparta_id, function(err, elim){
+															if (err)
+																res.send(err);})
+										.populate('calificaciones').exec(function(err, apartamento){console.log(apartamento.calificaciones); 
+																res.json(apartamento);});
+					
+								});
+							});
+					}else{var modificado = Calificacion.findOne({'autor':user._id, 'aparta':aparta._id});
+					      modificado.exec(function(err, modify){if (err)
+									res.send(err);
+								modify.calificacion=req.body.calificacion;
+								modify.save(function(err, mod) {
+									if (err)
+									Apartamento.findById(req.body.aparta_id, function(err, elim){
+															if (err)
+																res.send(err);})
+										.populate('calificaciones').exec(function(err, apartamento){console.log(apartamento.calificaciones); 
+																res.json(apartamento);});
+								});
+								
+					});}
+
 				});
+				
 				});
 							
 			});
@@ -447,6 +431,8 @@ router.route('/calificacion/cambiar')
 	});
 //Agregar comentarios
 //Borrar comentarios
+//Lista Recientes
+//Lista Favoritos
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
