@@ -71,7 +71,6 @@ router.route('/tokens/:token_id')
 		}, function(err, token) {
 			if (err)
 				res.send(err);
-
 			res.json({ message: 'Successfully deleted' });
 		});
 	});
