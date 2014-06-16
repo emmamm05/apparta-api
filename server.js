@@ -16,8 +16,8 @@ var Comentario = require('./app/models/comentario');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
-//mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
-mongoose.connect('mongodb://localhost/example');
+mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
+//mongoose.connect('mongodb://localhost/example');
 
 var port = process.env.PORT || 8080; 		// set our port
 
@@ -170,40 +170,50 @@ router.route('/usuarios/:usuario_id')
 
 //http://localhost:8080/api/apartamentos
 //Agregar nuevo apartamento
-router.route('/apartamentos') //?app_token
+router.route('/apartamentos/:user_id') //?app_token
 	.post(function(req, res) {
 		console.log("POST /apartamentos");
 		console.log(req.params);
 		console.log(req.body);
-		var apartamento = new Apartamento(); 		
-		apartamento.descripcion = req.body.descripcion;
-		apartamento.direccion_fisica = req.body.direccion_fisica;
-		apartamento.area = req.body.area;
-		apartamento.ubicacion_latitud = req.body.ubicacion_latitud;
-		apartamento.ubicacion_longitud = req.body.ubicacion_longitud;
-		apartamento.cercania_tec = req.body.cercania_tec;
-		apartamento.mensualidad= req.body.mensualidad;
-		apartamento.habitaciones= req.body.habitaciones;
-		apartamento.titulo= req.body.titulo;
-		apartamento.genero= req.body.genero;
-		apartamento.opcion_agua= req.body.opcion_agua;
-		apartamento.opcion_electricidad= req.body.opcion_electricidad;
-		apartamento.opcion_seguridad= req.body.opcion_seguridad;
-		apartamento.opcion_internet= req.body.opcion_internet;
-		apartamento.foto_uno= req.body.foto_uno;
-		apartamento.foto_dos= req.body.foto_dos;
-		apartamento.foto_tres= req.body.foto_tres;
-		apartamento.foto_cuatro= req.body.foto_cuatro; 
-		 
+		var usuario = Usuario.findById(req.params.user_id, function(err, user){
+									if (err)
+										res.send(err);
+									var apartamento = new Apartamento(); 		
+									apartamento.descripcion = req.body.descripcion;
+									apartamento.direccion_fisica = req.body.direccion_fisica;
+									apartamento.area = req.body.area;
+									apartamento.ubicacion_latitud = req.body.ubicacion_latitud;
+									apartamento.ubicacion_longitud = req.body.ubicacion_longitud;
+									apartamento.cercania_tec = req.body.cercania_tec;
+									apartamento.mensualidad= req.body.mensualidad;
+									apartamento.habitaciones= req.body.habitaciones;
+									apartamento.titulo= req.body.titulo;
+									apartamento.genero= req.body.genero;
+									apartamento.opcion_agua= req.body.opcion_agua;
+									apartamento.opcion_electricidad= req.body.opcion_electricidad;
+									apartamento.opcion_seguridad= req.body.opcion_seguridad;
+									apartamento.opcion_internet= req.body.opcion_internet;
+									apartamento.foto_uno= req.body.foto_uno;
+									apartamento.foto_dos= req.body.foto_dos;
+									apartamento.foto_tres= req.body.foto_tres;
+									apartamento.foto_cuatro= req.body.foto_cuatro; 
+									apartamento.anunciante= user._id;
 
-		// save the token and check for errors
-		console.log(apartamento);
-		apartamento.save(function(err) {
-			if (err)
-				res.send(406,err);
-			console.log("error"+err);
-			res.json({id:apartamento._id, message: 'Apartamento created!' });
+									// save the token and check for errors
+									console.log(apartamento);
+									apartamento.save(function(err, aparta) {
+										if (err)
+											res.send(406,err);
+										console.log("error"+err);
+										user.apartamentos.push(aparta._id);
+										user.save(function(err, aparta) {
+												if (err)
+													res.send(err);
+										});
+										res.json({id:aparta._id, message: 'Apartamento created!' });
+									});
 		});
+		
 		
 	});
 
@@ -247,7 +257,7 @@ router.route('/apartamentos/:aparta_id')//?app_token
 				res.send(err);
 			
 				
-		}).populate('comentarios').exec(function(err, apartamento){console.log(apartamento.comentarios); 
+		}).populate('comentarios').populate('anunciante').exec(function(err, apartamento){console.log(apartamento.comentarios); 
 										res.json(apartamento);});
 	})
 //Modificar Información de apartamento
@@ -508,7 +518,20 @@ router.route('/comentario')
 				});
 	
 	});
-
+//Mis Apartas
+router.route('/misapartas/:user_id')
+	.get(function(req, res) {
+		Usuario.findById(req.params.user_id, function(err) {
+								if (err)
+									res.send(err);
+								
+		}).populate('apartamentos').exec(function(err, result) {
+								if (err)
+									res.send(err);
+								res.json(result.apartamentos);
+								
+						});
+	});
 //Lista Recientes
 router.route('/recientes')
 	.get(function(req, res) {

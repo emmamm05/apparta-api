@@ -15,9 +15,8 @@ var Usuario   = new Schema({
       interes   :[{type: String}],
       tokens	:[{ type : Schema.ObjectId, ref : 'Token' }], //Conjunto de Tokens
       es_anunciante: { type: Boolean, default: false},
-      anunciante:{
-	apartamentos: [ { type : Schema.ObjectId, ref : 'Apartamento' } ]
-      }
+      apartamentos: [ { type : Schema.ObjectId, ref : 'Apartamento' } ]
+      
 });
 
 module.exports = mongoose.model('Usuario', Usuario);

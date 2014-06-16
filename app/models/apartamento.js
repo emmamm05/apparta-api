@@ -31,6 +31,7 @@ var Apartamento   = new Schema({
       foto_dos: {type: String},
       foto_tres: {type: String},
       foto_cuatro: {type: String},
+      anunciante:{type: ObjectId, ref: 'Usuario'},
       interesados: [{type: ObjectId, ref: 'Usuario'}],
       fecha_creacion : { type : Date , default: Date.now}	
 });

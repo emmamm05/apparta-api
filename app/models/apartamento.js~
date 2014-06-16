@@ -31,8 +31,9 @@ var Apartamento   = new Schema({
       foto_dos: {type: String},
       foto_tres: {type: String},
       foto_cuatro: {type: String},
+      anunciante:{type: String},
       interesados: [{type: ObjectId, ref: 'Usuario'}],
-      fecha_publicacion : { type : Date , default: Date.now}	
+      fecha_creacion : { type : Date , default: Date.now}	
 });
 //Falta forzar algunos numeros en decimales
 
