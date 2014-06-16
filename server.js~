@@ -37,7 +37,7 @@ router.use(function(req, res, next) {
 });
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function(req, res) {
+router.get('*', function(req, res) {
 	res.json({ message: 'hooray! welcome to our api!' });	
 });
 
@@ -484,9 +484,15 @@ router.route('/comentario')
 									res.send(err);
 									Apartamento.findById(req.body.aparta_id, function(err, elim){
 															if (err)
-																res.send(err);})
-										.populate('comentarios').exec(function(err, apartamento){console.log(apartamento.comentarios); 
-																res.json(apartamento);});
+																res.send(err);}).lean()
+										.populate({path:'comentarios'}).exec(function(err, apartamento){var options = {
+																      path: 'comentarios.autor',
+																      model: 'Usuario'
+																    };if (err)
+																	res.send(err);
+												Apartamento.populate(apartamento, options, function (err, projects) {
+												      res.json(projects);
+												    });});
 							});
 						});
 

@@ -16,8 +16,8 @@ var Comentario = require('./app/models/comentario');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
-mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
-//mongoose.connect('mongodb://localhost/example');
+//mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
+mongoose.connect('mongodb://localhost/example');
 
 var port = process.env.PORT || 8080; 		// set our port
 
@@ -37,7 +37,7 @@ router.use(function(req, res, next) {
 });
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function(req, res) {
+router.get('*', function(req, res) {
 	res.json({ message: 'hooray! welcome to our api!' });	
 });
 
@@ -460,7 +460,7 @@ router.route('/calificacion')
 	});
 
 
-//Agregar comentarios. Falta populate de autores
+//Agregar comentarios.
 router.route('/comentario')
 	.put(function(req, res) {
 		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
@@ -484,9 +484,15 @@ router.route('/comentario')
 									res.send(err);
 									Apartamento.findById(req.body.aparta_id, function(err, elim){
 															if (err)
-																res.send(err);})
-										.populate('comentarios').exec(function(err, apartamento){console.log(apartamento.comentarios); 
-																res.json(apartamento);});
+																res.send(err);}).lean()
+										.populate({path:'comentarios'}).exec(function(err, apartamento){var options = {
+																      path: 'comentarios.autor',
+																      model: 'Usuario'
+																    };if (err)
+																	res.send(err);
+												Apartamento.populate(apartamento, options, function (err, projects) {
+												      res.json(projects);
+												    });});
 							});
 						});
 
