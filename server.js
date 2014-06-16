@@ -121,7 +121,7 @@ router.route('/usuarios') //?app_token
 	});
 	
 //Ver Información de usuario
-router.route('/usuarios/:usuario_id')//?app_token
+router.route('/usuarios/:usuario_id')
 	.get(function(req, res) {
 		Usuario.findById(req.params.usuario_id, function(err, usuario) {
 			if (err){
@@ -290,7 +290,7 @@ router.route('/apartamentos/:aparta_id')//?app_token
 			res.json({ message: 'Successfully deleted' });
 		});
 	});
-//Agregar interesados del apartamento
+//Agregar interesados del apartamento -> Requiere aparta_id, user_id
 router.route('/interesados')
 	.put(function(req, res) {
 		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
@@ -322,7 +322,7 @@ router.route('/interesados')
 		
 	});
 
-//Borrar interesados del apartamento
+//Borrar interesados del apartamento -> Requiere aparta_id, user_id
 router.route('/interesados/eliminar')
 	.put(function(req, res) {
 		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
@@ -353,7 +353,7 @@ router.route('/interesados/eliminar')
 				});
 	
 	});
-//Ver listas de apartamentos de interes
+//Ver listas de apartamentos de interes -> Requiere user_id
 router.route('/interesados/:user_id')
 	.get(function(req, res) {
 		
@@ -371,7 +371,7 @@ router.route('/interesados/:user_id')
 
 
 
-//Agregar y Actualizar al agregar calificación
+//Agregar y Actualizar al agregar calificación -> Requiere aparta_id, user_id y calificacion
 router.route('/calificacion')
 	.put(function(req, res) {
 		
@@ -390,6 +390,7 @@ router.route('/calificacion')
 					
 					if (err)
 						res.send(err);
+					//Agregar calificacion
 					else if (exist.length==0){
 						var calificacion = new Calificacion();
 						calificacion.calificacion=req.body.calificacion;
@@ -425,6 +426,7 @@ router.route('/calificacion')
 					
 								});
 							});
+					//Actualizar calificacion
 					}else{var modificado = Calificacion.findOne({'autor':user._id, 'aparta':aparta._id});
 					      modificado.exec(function(err, modify){if (err)
 									res.send(err);
@@ -460,7 +462,7 @@ router.route('/calificacion')
 	});
 
 
-//Agregar comentarios.
+//Agregar comentarios -> Requiere aparta_id, user_id y contenido.
 router.route('/comentario')
 	.put(function(req, res) {
 		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
@@ -490,8 +492,8 @@ router.route('/comentario')
 																      model: 'Usuario'
 																    };if (err)
 																	res.send(err);
-												Apartamento.populate(apartamento, options, function (err, projects) {
-												      res.json(projects);
+												Apartamento.populate(apartamento, options, function (err, result_aparta) {
+												      res.json(result_aparta);
 												    });});
 							});
 						});
