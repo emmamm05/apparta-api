@@ -460,7 +460,7 @@ router.route('/calificacion')
 	});
 
 
-//Agregar comentarios. Falta populate de autores
+//Agregar comentarios.
 router.route('/comentario')
 	.put(function(req, res) {
 		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {

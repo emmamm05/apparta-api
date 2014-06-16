@@ -16,8 +16,8 @@ var Comentario = require('./app/models/comentario');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
-//mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
-mongoose.connect('mongodb://localhost/example');
+mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
+//mongoose.connect('mongodb://localhost/example');
 
 var port = process.env.PORT || 8080; 		// set our port
 
@@ -290,7 +290,7 @@ router.route('/apartamentos/:aparta_id')//?app_token
 			res.json({ message: 'Successfully deleted' });
 		});
 	});
-//Agregar interesados del apartamento//Bug arreglar
+//Agregar interesados del apartamento
 router.route('/interesados')
 	.put(function(req, res) {
 		var apartamento = Apartamento.findById(req.body.aparta_id, function(err, aparta) {
