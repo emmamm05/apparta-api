@@ -9,7 +9,7 @@ var app        = express(); 				// define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 var Usuario    = require('./app/models/usuario');
-var Token    = require('./app/models/usuario');
+var Token    = require('./app/models/token');
 var Apartamento = require('./app/models/apartamento');
 var Calificacion = require('./app/models/calificacion');
 var Comentario = require('./app/models/comentario');
@@ -44,22 +44,28 @@ router.get('/', function(req, res) {
 //TOKENS routes
 router.route('/tokens')
 	// create a token (accessed at POST http://localhost:8080/api/tokens)
-	.post(function(req, res) {
-		var usuario = Usuario.findOne( {email: req.params.email}, function(err,usuario){
+	.put(function(req, res) {
+		var usuario = Usuario.findOne( {'email': req.body.email}, function(err,user){
 		    if (err)
 			res.send(err);
+		    var token = new Token();
+			require('crypto').randomBytes(48, function(ex, buf) {
+				token.token = buf.toString('hex');
+				token.save(function(err, tok) {
+					if (err)
+						res.send(err);
+					user.tokens.push(tok._id);
+					user.save(function(err, tok) {
+						if (err)
+							res.send(err);})
+					res.json(tok);
+				});
+			});
+			
+					
 		});
 		
-		var token = new Token();
-		require('crypto').randomBytes(48, function(ex, buf) {
-			token.token = buf.toString('hex');
-		        usuario.tokens = [token];
-		});
-		token.save(function(err) {
-			if (err)
-				res.send(err);
-			res.json(token);
-		});		
+		
 	});
 
 router.route('/tokens/:token_id')
@@ -139,7 +145,7 @@ router.route('/usuarios/:usuario_id')
 			usuario.apellido = req.body.apellido;
 			usuario.email = req.body.email;
 			usuario.telefono = req.body.telefono;
-			
+			usuario.es_anunciante = req.body.es_anunciante;
 			// save User
 			usuario.save(function(err) {
 				if (err)

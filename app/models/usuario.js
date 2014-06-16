@@ -2,10 +2,6 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 var ObjectId	 = mongoose.Schema.Types.ObjectId;
 
-var Token = new Schema({
-      token 	:{ type: String }//, required: true
-});
-
 var Usuario   = new Schema({
       nombre	:{ type: String, required: true },
       apellido  :{ type: String, required: true },
@@ -17,7 +13,7 @@ var Usuario   = new Schema({
       genero	:{ type: String, required: true },
       oauth_proveedor :{ type: String, required: true },//facebook o google
       interes   :[{type: String}],
-      tokens	:[Token], //Conjunto de Tokens
+      tokens	:[{ type : Schema.ObjectId, ref : 'Token' }], //Conjunto de Tokens
       es_anunciante: { type: Boolean, default: false},
       anunciante:{
 	apartamentos: [ { type : Schema.ObjectId, ref : 'Apartamento' } ]

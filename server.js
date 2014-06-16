@@ -9,15 +9,15 @@ var app        = express(); 				// define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 var Usuario    = require('./app/models/usuario');
-var Token    = require('./app/models/usuario');
+var Token    = require('./app/models/token');
 var Apartamento = require('./app/models/apartamento');
 var Calificacion = require('./app/models/calificacion');
 var Comentario = require('./app/models/comentario');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
-mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
-//mongoose.connect('mongodb://localhost/example');
+//mongoose.connect('mongodb://emmamm05:8ClQ5RA4Nywv@ds033499.mongolab.com:33499/apparta'); // connect to our database
+mongoose.connect('mongodb://localhost/example');
 
 var port = process.env.PORT || 8080; 		// set our port
 
@@ -44,22 +44,28 @@ router.get('/', function(req, res) {
 //TOKENS routes
 router.route('/tokens')
 	// create a token (accessed at POST http://localhost:8080/api/tokens)
-	.post(function(req, res) {
-		var usuario = Usuario.findOne( {email: req.params.email}, function(err,usuario){
+	.put(function(req, res) {
+		var usuario = Usuario.findOne( {'email': req.body.email}, function(err,user){
 		    if (err)
 			res.send(err);
+		    var token = new Token();
+			require('crypto').randomBytes(48, function(ex, buf) {
+				token.token = buf.toString('hex');
+				token.save(function(err, tok) {
+					if (err)
+						res.send(err);
+					user.tokens.push(tok._id);
+					user.save(function(err, tok) {
+						if (err)
+							res.send(err);})
+					res.json(tok);
+				});
+			});
+			
+					
 		});
 		
-		var token = new Token();
-		require('crypto').randomBytes(48, function(ex, buf) {
-			token.token = buf.toString('hex');
-		        usuario.tokens = [token];
-		});
-		token.save(function(err) {
-			if (err)
-				res.send(err);
-			res.json(token);
-		});		
+		
 	});
 
 router.route('/tokens/:token_id')
