@@ -224,10 +224,8 @@ router.route('/apartamentos/search')
 		if(req.query.opcion_internet=="true"){
 			query.find({"opcion_internet":true});
 		}
-		
+		query.populate('fotos');
 		query.exec(function (err, apartamento) {
-  		// called when the `query.complete` or `query.error` are called
-  		// internally
 			if (err)
 				res.send(err);
 			res.json(apartamento);
