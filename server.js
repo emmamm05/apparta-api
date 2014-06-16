@@ -257,7 +257,7 @@ router.route('/apartamentos/:aparta_id')//?app_token
 				res.send(err);
 			
 				
-		}).populate('comentarios').populate('anunciante').exec(function(err, apartamento){console.log(apartamento.comentarios); 
+		}).populate('anunciante').exec(function(err, apartamento){
 										res.json(apartamento);});
 	})
 //Modificar Información de apartamento
