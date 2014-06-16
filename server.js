@@ -535,7 +535,7 @@ router.route('/misapartas/:user_id')
 //Lista Recientes
 router.route('/recientes')
 	.get(function(req, res) {
-		Apartamento.find({}).sort({fecha_creacion:  'desc'}).limit(4).exec(function(err, resultado) {
+		Apartamento.find({}).sort({fecha_creacion:  'desc'}).limit(8).exec(function(err, resultado) {
 								if (err)
 									res.send(err);
 								res.json(resultado);
