@@ -18,6 +18,7 @@ var Usuario   = new Schema({
       oauth_proveedor :{ type: String, required: true },//facebook o google
       interes   :[{type: String}],
       tokens	:[Token], //Conjunto de Tokens
+      es_anunciante: { type: Boolean, default: false},
       anunciante:{
 	apartamentos: [ { type : Schema.ObjectId, ref : 'Apartamento' } ]
       }

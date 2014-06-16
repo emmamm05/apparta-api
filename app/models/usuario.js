@@ -10,7 +10,7 @@ var Usuario   = new Schema({
       nombre	:{ type: String, required: true },
       apellido  :{ type: String, required: true },
       oauth_id 	:{ type: String, required: true},
-      telefono 	:{ type: String, required: true},
+      telefono 	:{ type: String},
       email     :{ type: String, required: true},//Falta regexp 
       cumpleanos:{ type: Date },
       password  :{ type: String},
