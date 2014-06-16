@@ -37,7 +37,7 @@ router.use(function(req, res, next) {
 });
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('*', function(req, res) {
+router.get('/', function(req, res) {
 	res.json({ message: 'hooray! welcome to our api!' });	
 });
 
@@ -110,10 +110,10 @@ router.route('/usuarios') //?app_token
 					usuario.genero = req.body.genero; 
 					usuario.oauth_proveedor = req.body.oauth_proveedor;
 					// save the token and check for errors
-					usuario.save(function(err) {
+					usuario.save(function(err, resultado) {
 						if (err)
 							res.send(err);
-						res.json({id:usuario._id, message: 'Usuario created!' });
+						res.json(resultado);
 					});
 				}
 			});
@@ -224,10 +224,8 @@ router.route('/apartamentos/search')
 		if(req.query.opcion_internet=="true"){
 			query.find({"opcion_internet":true});
 		}
-		
+		query.populate('fotos');
 		query.exec(function (err, apartamento) {
-  		// called when the `query.complete` or `query.error` are called
-  		// internally
 			if (err)
 				res.send(err);
 			res.json(apartamento);

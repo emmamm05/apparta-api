@@ -110,10 +110,10 @@ router.route('/usuarios') //?app_token
 					usuario.genero = req.body.genero; 
 					usuario.oauth_proveedor = req.body.oauth_proveedor;
 					// save the token and check for errors
-					usuario.save(function(err) {
+					usuario.save(function(err, resultado) {
 						if (err)
 							res.send(err);
-						res.json({id:usuario._id, message: 'Usuario created!' });
+						res.json(resultado);
 					});
 				}
 			});
@@ -139,7 +139,7 @@ router.route('/usuarios/:usuario_id')
 			usuario.apellido = req.body.apellido;
 			usuario.email = req.body.email;
 			usuario.telefono = req.body.telefono;
-			
+			usuario.es_anunciante = req.body.es_anunciante;
 			// save User
 			usuario.save(function(err) {
 				if (err)
